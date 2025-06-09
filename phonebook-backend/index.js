@@ -26,6 +26,7 @@ let persons = [
 ];
 
 app.use(express.json());
+app.use(express.static("dist"));
 app.use(
   morgan(function (tokens, req, res) {
     return [
@@ -112,7 +113,27 @@ app.post("/api/persons", (request, response) => {
   response.json(person);
 });
 
-const PORT = 3001;
+app.put("/api/persons/:id", (request, response) => {
+  const id = request.params.id;
+  const body = request.body;
+
+  const person = persons.find((person) => person.id === id);
+
+  if (person) {
+    person.number = body.number;
+    response.json(person);
+  } else {
+    response.status(404).end();
+  }
+});
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: "unknown endpoint" });
+};
+
+app.use(unknownEndpoint);
+
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

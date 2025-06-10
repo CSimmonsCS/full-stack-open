@@ -1,4 +1,3 @@
-//mongodb+srv://csimmonscs:<db_password>@cluster0.lzcjfgx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 const mongoose = require("mongoose");
 
 if (process.argv.length < 3) {

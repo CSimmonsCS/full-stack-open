@@ -3,6 +3,11 @@ import personsService from "./services/persons";
 import Notification from "./components/Notification";
 import "./index.css";
 
+const NotificationType = {
+  SUCCESS: "success",
+  ERROR: "error",
+};
+
 const Filter = ({ handleSearch, search }) => {
   return (
     <div>
@@ -59,6 +64,9 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState(null);
+  const [notificationType, setNotificationType] = useState(
+    NotificationType.SUCCESS
+  );
 
   useEffect(() => {
     personsService.getAll().then((response) => {
@@ -98,11 +106,13 @@ const App = () => {
           );
           setNewName("");
           setNewNumber("");
+          setNotificationType(NotificationType.SUCCESS);
         })
         .catch((error) => {
           setMessage(
             `Information of ${newName} has already been removed from server`
           );
+          setNotificationType(NotificationType.ERROR);
         });
       return;
     } else if (existingPerson) {
@@ -119,6 +129,11 @@ const App = () => {
         setNewName("");
         setNewNumber("");
         setMessage(`Added ${newName}`);
+        setNotificationType(NotificationType.SUCCESS);
+      })
+      .catch((error) => {
+        setMessage(error.response.data.error);
+        setNotificationType(NotificationType.ERROR);
       });
   };
 
@@ -142,7 +157,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      {message && <Notification message={message} />}
+      {message && <Notification message={message} type={notificationType} />}
       <Filter handleSearch={handleSearch} search={search} />
       <h3>Add a new</h3>
       <PersonForm

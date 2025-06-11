@@ -113,6 +113,9 @@ const App = () => {
             `Information of ${newName} has already been removed from server`
           );
           setNotificationType(NotificationType.ERROR);
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
         });
       return;
     } else if (existingPerson) {
@@ -134,6 +137,9 @@ const App = () => {
       .catch((error) => {
         setMessage(error.response.data.error);
         setNotificationType(NotificationType.ERROR);
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
       });
   };
 
